@@ -1,4 +1,362 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qureator - Humanizing Drug Discovery</title>
+    <style>
+        /* --- پایه و پالت رنگی تاریک و درخشان سایت اصلی --- */
+        :root {
+            --bg-deep: #05060b;
+            --bg-card: rgba(13, 17, 29, 0.6);
+            --border-glow: rgba(0, 255, 204, 0.15);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --neon-cyan: #00ffcc;
+            --neon-purple: #8833ff;
+            --text-pure: #ffffff;
+            --text-dim: #94a3b8;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-pure);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- سیستم بک‌گراند چندلایه داینامیک --- */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 0%, #0d1527 0%, var(--bg-deep) 70%);
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.4;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .orb-cyan {
+            top: -20%;
+            left: 10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--neon-cyan) 0%, rgba(0,0,0,0) 70%);
+            animation: floatOrb 12s infinite alternate;
+        }
+
+        .orb-purple {
+            top: 40%;
+            right: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--neon-purple) 0%, rgba(0,0,0,0) 70%);
+            animation: floatOrb 18s infinite alternate-reverse;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 40px) scale(1.1); }
+        }
+
+        /* --- هدر و منوی آبشاری انیمیشنی (Dropdown) --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(5, 6, 11, 0.75);
+            border-bottom: 1px solid var(--border-subtle);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 40px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--neon-cyan), #00b3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            align-items: center;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 0;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--neon-cyan);
+        }
+
+        /* استایل منوی بازشونده (Dropdown) */
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(15px);
+            width: 260px;
+            background: rgba(10, 14, 26, 0.95);
+            border: 1px solid var(--border-glow);
+            border-radius: 14px;
+            padding: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+        }
+
+        nav ul li:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(5px);
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--text-dim);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .dropdown a:hover {
+            background: rgba(0, 255, 204, 0.08);
+            color: var(--neon-cyan);
+            padding-left: 22px;
+        }
+
+        .btn-contact {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            padding: 10px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-contact:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+        }
+
+        /* --- بخش هیرو (Hero Section) --- */
+        .hero {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 180px 40px 100px 40px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .hero-text h1 {
+            font-size: 56px;
+            line-height: 1.15;
+            margin-bottom: 25px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .hero-text h1 span {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            color: var(--text-dim);
+            font-size: 18px;
+            margin-bottom: 40px;
+            max-width: 650px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--neon-cyan), #00b3ff);
+            color: #05060b;
+            padding: 16px 36px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 4px 25px rgba(0, 255, 204, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+        }
+
+        /* تراشه بیومدیکال هیرو */
+        .hero-media {
+            display: flex;
+            justify-content: center;
+        }
+
+        .glass-panel {
+            width: 100%;
+            max-width: 440px;
+            height: 440px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        .glass-panel img {
+            width: 88%;
+            height: 88%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- بخش استدلال و آمار (Stats/Value Section) --- */
+        .stats-section {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card h3 {
+            font-size: 42px;
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .stat-card p {
+            color: var(--text-dim);
+            font-size: 15px;
+        }
+
+        /* --- بخش پلتفرم‌ها و ساختارها (تا انتهای صفحه اصلی) --- */
+        .platforms {
+            max-width: 1300px;
+            margin: 100px auto;
+            padding: 0 40px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-header h2 {
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-dim);
+            font-size: 18px;
+        }
+
+        .platform-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-bottom: 120px;
+        }
+
+        .platform-row.reverse {
+            direction: rtl;
+        }
+
+        .platform-row.reverse .platform-info {
+            direction: ltr;
+        }
+
+        .platform-info h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .platform-info p {
+            color: var(--text-dim);
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .platform-img-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
