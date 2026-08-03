@@ -1,4 +1,859 @@
-!DOCTYPE html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;WanderWise&lt;/title&gt;
+  &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+  &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+  &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+  &lt;style&gt;
+    :root{
+      --bg:#0d1117;
+      --bg-2:#111722;
+      --surface:#151c27;
+      --surface-2:#1a2230;
+      --text:#f5f7fb;
+      --muted:#a7b0bf;
+      --line:rgba(255,255,255,0.08);
+      --accent:#d7a86e;
+      --accent-2:#8ab17d;
+      --accent-3:#f2c18d;
+      --shadow: 0 24px 70px rgba(0,0,0,.35);
+      --radius: 24px;
+      --max: 1200px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(215,168,110,.12), transparent 24%),
+        radial-gradient(circle at 80% 20%, rgba(138,177,125,.10), transparent 26%),
+        linear-gradient(180deg, #0b0f14 0%, #0d1117 100%);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .container{
+      width:min(var(--max), calc(100% - 32px));
+      margin:0 auto;
+    }
+
+    /* Header */
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(16px);
+      background: rgba(13,17,23,.72);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      height:78px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:24px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+      letter-spacing:.4px;
+    }
+    .brand-mark{
+      width:42px;height:42px;border-radius:14px;
+      background:
+        linear-gradient(145deg, rgba(215,168,110,.95), rgba(138,177,125,.85));
+      display:grid;
+      place-items:center;
+      color:#111;
+      font-weight:900;
+      box-shadow:0 12px 30px rgba(215,168,110,.2);
+    }
+    .brand-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+    .brand-text span:first-child{
+      font-size:1.04rem;
+    }
+    .brand-text span:last-child{
+      font-size:.78rem;
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      color:#d8dde6;
+      font-size:.95rem;
+    }
+    .menu a{opacity:.86}
+    .menu a:hover{opacity:1;color:#fff}
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .btn{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:13px 18px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.95rem;
+      transition:.25s ease;
+      white-space:nowrap;
+    }
+    .btn-primary{
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
+      color:#111;
+      box-shadow:0 16px 30px rgba(215,168,110,.18);
+    }
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-ghost{
+      background:rgba(255,255,255,.03);
+      color:#fff;
+      border:1px solid var(--line);
+    }
+    .btn-ghost:hover{background:rgba(255,255,255,.06)}
+
+    .burger{
+      display:none;
+      width:46px;height:46px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      color:#fff;
+    }
+
+    /* Hero */
+    .hero{
+      padding:46px 0 20px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:24px;
+      align-items:stretch;
+      min-height: calc(100vh - 110px);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(21,28,39,.95), rgba(17,23,34,.95));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero-copy{
+      padding:44px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      width:max-content;
+      padding:9px 14px;
+      border-radius:999px;
+      background:rgba(215,168,110,.12);
+      color:#f0c48f;
+      border:1px solid rgba(215,168,110,.16);
+      font-size:.92rem;
+      font-weight:600;
+      letter-spacing:.2px;
+      margin-bottom:22px;
+    }
+    .eyebrow-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 5px rgba(215,168,110,.12);
+    }
+
+    h1,h2,h3{
+      margin:0;
+      line-height:1.05;
+    }
+    h1{
+      font-family:Caveat, cursive;
+      font-size: clamp(3.8rem, 8vw, 6.6rem);
+      letter-spacing:.2px;
+      margin-bottom:18px;
+    }
+    .hero-copy p{
+      margin:0;
+      color:var(--muted);
+      font-size:1.02rem;
+      line-height:1.8;
+      max-width:62ch;
+    }
+    .hero-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin:28px 0 34px;
+    }
+    .chip{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      color:#dfe5ee;
+      font-size:.92rem;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:34px;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-top:auto;
+    }
+    .stat{
+      padding:18px 16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+    }
+    .stat strong{
+      display:block;
+      font-size:1.45rem;
+      margin-bottom:8px;
+    }
+    .stat span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.5;
+    }
+
+    .hero-visual{
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:
+        linear-gradient(180deg, rgba(11,15,20,.28), rgba(11,15,20,.72)),
+        url(&quot;https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;w=1400&amp;q=80&quot;) center/cover;
+    }
+    .visual-top{
+      padding:28px 28px 0;
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .badge{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.12);
+      font-size:.92rem;
+      font-weight:600;
+    }
+    .visual-card{
+      margin:28px;
+      margin-top:auto;
+      padding:24px;
+      border-radius:24px;
+      background: rgba(13,17,23,.65);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .visual-card h3{
+      font-size:1.65rem;
+      margin-bottom:10px;
+    }
+    .visual-card p{
+      margin:0 0 18px;
+      color:#d1d6df;
+      line-height:1.7;
+    }
+    .visual-list{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .mini{
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#eef2f7;
+      font-size:.92rem;
+      line-height:1.45;
+    }
+    .mini strong{display:block;margin-bottom:6px}
+
+    /* Sections */
+    section{
+      padding:22px 0 26px;
+    }
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:18px;
+      margin-bottom:18px;
+    }
+    .section-head h2{
+      font-family:Caveat, cursive;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+    .section-head p{
+      max-width:58ch;
+      color:var(--muted);
+      line-height:1.7;
+      margin:0;
+    }
+
+    /* Articles */
+    .articles{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+    .article{
+      overflow:hidden;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(21,28,39,.95), rgba(17,23,34,.95));
+      box-shadow: var(--shadow);
+      transition:.25s ease;
+    }
+    .article:hover{transform:translateY(-4px)}
+    .article-thumb{
+      height:240px;
+      background-size:cover;
+      background-position:center;
+      position:relative;
+    }
+    .article-thumb::after{
+      content:&quot;&quot;;
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, transparent 30%, rgba(11,15,20,.55) 100%);
+    }
+    .article-body{
+      padding:20px;
+    }
+    .meta{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:.88rem;
+      margin-bottom:12px;
+    }
+    .article h3{
+      font-size:1.28rem;
+      line-height:1.4;
+      margin-bottom:10px;
+    }
+    .article p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:.96rem;
+    }
+    .link{
+      color:#f0c48f;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    /* Map section */
+    .map-panel{
+      padding:24px;
+    }
+    .map-wrap{
+      position:relative;
+      min-height:520px;
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(rgba(11,15,20,.25), rgba(11,15,20,.35)),
+        url(&quot;https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&amp;fit=crop&amp;w=1600&amp;q=80&quot;) center/cover;
+    }
+    .map-note{
+      position:absolute;
+      top:18px;
+      left:18px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(13,17,23,.72);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+      color:#e7ecf3;
+      max-width:300px;
+      font-size:.93rem;
+      line-height:1.5;
+    }
+    .pin{
+      position:absolute;
+      transform:translate(-50%,-100%);
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(245,247,251,.92);
+      color:#111;
+      font-weight:700;
+      font-size:.9rem;
+      border:1px solid rgba(255,255,255,.3);
+      box-shadow:0 14px 28px rgba(0,0,0,.22);
+      cursor:pointer;
+      transition:.2s ease;
+      white-space:nowrap;
+    }
+    .pin:hover{transform:translate(-50%,-108%) scale(1.03)}
+    .pin::after{
+      content:&quot;&quot;;
+      position:absolute;
+      bottom:-10px;
+      left:50%;
+      transform:translateX(-50%);
+      width:12px;height:12px;border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 5px rgba(215,168,110,.18);
+    }
+
+    .pin.one{top:35%;left:22%}
+    .pin.two{top:47%;left:51%}
+    .pin.three{top:31%;left:77%}
+    .pin.four{top:66%;left:68%}
+    .pin.five{top:57%;left:33%}
+
+    .location-card{
+      position:absolute;
+      right:18px;
+      bottom:18px;
+      width:min(320px, calc(100% - 36px));
+      padding:18px;
+      border-radius:20px;
+      background:rgba(13,17,23,.72);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(12px);
+    }
+    .location-card strong{
+      display:block;
+      font-size:1.1rem;
+      margin-bottom:8px;
+    }
+    .location-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:.93rem;
+    }
+
+    /* Newsletter */
+    .newsletter{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      align-items:center;
+      padding:24px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:linear-gradient(135deg, rgba(24,31,44,.96), rgba(17,23,34,.96));
+      box-shadow: var(--shadow);
+    }
+    .newsletter h2{
+      font-family:Caveat, cursive;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      margin-bottom:12px;
+    }
+    .newsletter p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      max-width:60ch;
+    }
+    .form{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .form input{
+      flex:1;
+      min-width:260px;
+      padding:15px 16px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#fff;
+      outline:none;
+      font:inherit;
+    }
+    .form input::placeholder{color:#8f98a7}
+    .form input:focus{
+      border-color:rgba(215,168,110,.55);
+      box-shadow:0 0 0 4px rgba(215,168,110,.12);
+    }
+
+    /* Footer */
+    footer{
+      padding:30px 0 40px;
+      color:var(--muted);
+      font-size:.94rem;
+    }
+    .footer-bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding-top:20px;
+      border-top:1px solid var(--line);
+      flex-wrap:wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .hero-grid,
+      .articles,
+      .newsletter{
+        grid-template-columns:1fr;
+      }
+      .hero-copy{padding:34px}
+      .hero-visual{min-height:560px}
+      .menu{display:none}
+      .burger{display:inline-flex;align-items:center;justify-content:center}
+    }
+
+    @media (max-width: 720px){
+      .nav{height:72px}
+      .brand-text span:last-child{display:none}
+      .hero{padding-top:24px}
+      .hero-copy{padding:24px}
+      .visual-top{padding:18px 18px 0}
+      .visual-card{margin:18px}
+      .hero-stats{grid-template-columns:1fr}
+      .section-head{flex-direction:column;align-items:flex-start}
+      .map-panel{padding:0}
+      .map-wrap{min-height:460px}
+      .newsletter{padding:20px}
+      .form{justify-content:stretch}
+      .form input,.form .btn{width:100%}
+      .pin{font-size:.82rem}
+    }
+
+    /* Mobile menu placeholder */
+    .mobile-menu{
+      display:none;
+      border-top:1px solid var(--line);
+      background:rgba(13,17,23,.95);
+    }
+    .mobile-menu.open{display:block}
+    .mobile-menu .container{
+      padding:14px 0 18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .mobile-menu a{
+      padding:12px 0;
+      color:#dfe5ee;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;div class=&quot;container nav&quot;&gt;
+      &lt;a href=&quot;#&quot; class=&quot;brand&quot;&gt;
+        &lt;div class=&quot;brand-mark&quot;&gt;W&lt;/div&gt;
+        &lt;div class=&quot;brand-text&quot;&gt;
+          &lt;span&gt;WanderWise&lt;/span&gt;
+          &lt;span&gt;Travel stories &amp; guides&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;nav class=&quot;menu&quot;&gt;
+        &lt;a href=&quot;#articles&quot;&gt;Articles&lt;/a&gt;
+        &lt;a href=&quot;#map&quot;&gt;Locations&lt;/a&gt;
+        &lt;a href=&quot;#newsletter&quot;&gt;Newsletter&lt;/a&gt;
+      &lt;/nav&gt;
+
+      &lt;div class=&quot;actions&quot;&gt;
+        &lt;a href=&quot;#newsletter&quot; class=&quot;btn btn-ghost&quot;&gt;Join Now&lt;/a&gt;
+        &lt;button class=&quot;burger&quot; id=&quot;burger&quot; aria-label=&quot;Open menu&quot;&gt;☰&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;mobile-menu&quot; id=&quot;mobileMenu&quot;&gt;
+      &lt;div class=&quot;container&quot;&gt;
+        &lt;a href=&quot;#articles&quot;&gt;Articles&lt;/a&gt;
+        &lt;a href=&quot;#map&quot;&gt;Locations&lt;/a&gt;
+        &lt;a href=&quot;#newsletter&quot;&gt;Newsletter&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;!-- Hero --&gt;
+    &lt;section class=&quot;hero&quot;&gt;
+      &lt;div class=&quot;container hero-grid&quot;&gt;
+        &lt;div class=&quot;panel hero-copy&quot;&gt;
+          &lt;div class=&quot;eyebrow&quot;&gt;
+            &lt;span class=&quot;eyebrow-dot&quot;&gt;&lt;/span&gt;
+            Curated travel inspiration
+          &lt;/div&gt;
+
+          &lt;h1&gt;Explore the world, one story at a time.&lt;/h1&gt;
+
+          &lt;p&gt;
+            WanderWise is a modern travel blog for curious explorers — featuring recent articles,
+            destination-based storytelling, and a newsletter that keeps your next journey on the horizon.
+          &lt;/p&gt;
+
+          &lt;div class=&quot;hero-meta&quot;&gt;
+            &lt;span class=&quot;chip&quot;&gt;Adventure-focused storytelling&lt;/span&gt;
+            &lt;span class=&quot;chip&quot;&gt;Earthy editorial style&lt;/span&gt;
+            &lt;span class=&quot;chip&quot;&gt;Clickable destinations&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;hero-actions&quot;&gt;
+            &lt;a href=&quot;#articles&quot; class=&quot;btn btn-primary&quot;&gt;Browse Articles&lt;/a&gt;
+            &lt;a href=&quot;#map&quot; class=&quot;btn btn-ghost&quot;&gt;View World Map&lt;/a&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;hero-stats&quot;&gt;
+            &lt;div class=&quot;stat&quot;&gt;
+              &lt;strong&gt;120+&lt;/strong&gt;
+              &lt;span&gt;travel articles published&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;stat&quot;&gt;
+              &lt;strong&gt;45&lt;/strong&gt;
+              &lt;span&gt;countries covered&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;stat&quot;&gt;
+              &lt;strong&gt;8k+&lt;/strong&gt;
+              &lt;span&gt;monthly readers&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;panel hero-visual&quot;&gt;
+          &lt;div class=&quot;visual-top&quot;&gt;
+            &lt;span class=&quot;badge&quot;&gt;Featured Route&lt;/span&gt;
+            &lt;span class=&quot;badge&quot;&gt;Updated Weekly&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;visual-card&quot;&gt;
+            &lt;h3&gt;Sunrise Trails &amp; Hidden Roads&lt;/h3&gt;
+            &lt;p&gt;
+              From mountain passes to seaside villages, discover handpicked journeys that feel immersive,
+              personal, and unforgettable.
+            &lt;/p&gt;
+
+            &lt;div class=&quot;visual-list&quot;&gt;
+              &lt;div class=&quot;mini&quot;&gt;
+                &lt;strong&gt;Patagonia&lt;/strong&gt;
+                Windy peaks, long hikes, and cinematic landscapes.
+              &lt;/div&gt;
+              &lt;div class=&quot;mini&quot;&gt;
+                &lt;strong&gt;Morocco&lt;/strong&gt;
+                Desert textures, warm colors, and cultural depth.
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- Articles --&gt;
+    &lt;section id=&quot;articles&quot;&gt;
+      &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;section-head&quot;&gt;
+          &lt;h2&gt;Recent Articles&lt;/h2&gt;
+          &lt;p&gt;
+            Fresh stories from the road — thoughtful guides, scenic escapes, and memorable travel experiences.
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;articles&quot;&gt;
+          &lt;article class=&quot;article&quot;&gt;
+            &lt;div class=&quot;article-thumb&quot; style=&quot;background-image:url(&#039;https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=1200&amp;q=80&#039;);&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;article-body&quot;&gt;
+              &lt;div class=&quot;meta&quot;&gt;
+                &lt;span&gt;March 12, 2026&lt;/span&gt;
+                &lt;span&gt;6 min read&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;h3&gt;Sunrise on the Amalfi Coast&lt;/h3&gt;
+              &lt;p&gt;
+                Coastal cliffs, lemon groves, and quiet morning light — a beautifully paced escape along Italy’s shoreline.
+              &lt;/p&gt;
+              &lt;a class=&quot;link&quot; href=&quot;#&quot;&gt;Read story →&lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/article&gt;
+
+          &lt;article class=&quot;article&quot;&gt;
+            &lt;div class=&quot;article-thumb&quot; style=&quot;background-image:url(&#039;https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&amp;fit=crop&amp;w=1200&amp;q=80&#039;);&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;article-body&quot;&gt;
+              &lt;div class=&quot;meta&quot;&gt;
+                &lt;span&gt;March 05, 2026&lt;/span&gt;
+                &lt;span&gt;4 min read&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;h3&gt;Quiet Corners of the Atlas Mountains&lt;/h3&gt;
+              &lt;p&gt;
+                A journey through red-rock paths, traditional villages, and starlit desert evenings.
+              &lt;/p&gt;
+              &lt;a class=&quot;link&quot; href=&quot;#&quot;&gt;Read story →&lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/article&gt;
+
+          &lt;article class=&quot;article&quot;&gt;
+            &lt;div class=&quot;article-thumb&quot; style=&quot;background-image:url(&#039;https://images.unsplash.com/photo-1544785349-c4a5301826fd?auto=format&amp;fit=crop&amp;w=1200&amp;q=80&#039;);&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;article-body&quot;&gt;
+              &lt;div class=&quot;meta&quot;&gt;
+                &lt;span&gt;February 26, 2026&lt;/span&gt;
+                &lt;span&gt;7 min read&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;h3&gt;Road Tripping the Wild West Coast&lt;/h3&gt;
+              &lt;p&gt;
+                Forest highways, dramatic ocean views, and the freedom of a road built for adventure.
+              &lt;/p&gt;
+              &lt;a class=&quot;link&quot; href=&quot;#&quot;&gt;Read story →&lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/article&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- Map --&gt;
+    &lt;section id=&quot;map&quot;&gt;
+      &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;section-head&quot;&gt;
+          &lt;h2&gt;World Map of Blog Locations&lt;/h2&gt;
+          &lt;p&gt;
+            Explore travel stories by destination and jump to posts from the places you want to discover next.
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;panel map-panel&quot;&gt;
+          &lt;div class=&quot;map-wrap&quot;&gt;
+            &lt;div class=&quot;map-note&quot;&gt;
+              Click a destination to browse related stories and discover travel guides from that region.
+            &lt;/div&gt;
+
+            &lt;button class=&quot;pin one&quot; data-location=&quot;Marrakech&quot;&gt;Marrakech&lt;/button&gt;
+            &lt;button class=&quot;pin two&quot; data-location=&quot;Rome&quot;&gt;Rome&lt;/button&gt;
+            &lt;button class=&quot;pin three&quot; data-location=&quot;Tokyo&quot;&gt;Tokyo&lt;/button&gt;
+            &lt;button class=&quot;pin four&quot; data-location=&quot;Bali&quot;&gt;Bali&lt;/button&gt;
+            &lt;button class=&quot;pin five&quot; data-location=&quot;Vancouver&quot;&gt;Vancouver&lt;/button&gt;
+
+            &lt;div class=&quot;location-card&quot; id=&quot;locationCard&quot;&gt;
+              &lt;strong&gt;Featured location: Marrakech&lt;/strong&gt;
+              &lt;p&gt;
+                Desert textures, vibrant markets, and warm architecture create a rich travel story worth exploring.
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- Newsletter --&gt;
+    &lt;section id=&quot;newsletter&quot;&gt;
+      &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;newsletter&quot;&gt;
+          &lt;div&gt;
+            &lt;h2&gt;Join the WanderWise Newsletter&lt;/h2&gt;
+            &lt;p&gt;
+              Get new travel stories, destination highlights, and exclusive guides delivered straight to your inbox every month.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;form class=&quot;form&quot; onsubmit=&quot;event.preventDefault(); alert(&#039;Thanks for subscribing!&#039;);&quot;&gt;
+            &lt;input type=&quot;email&quot; placeholder=&quot;Enter your email address&quot; required /&gt;
+            &lt;button class=&quot;btn btn-primary&quot; type=&quot;submit&quot;&gt;Subscribe&lt;/button&gt;
+          &lt;/form&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;div class=&quot;container footer-bar&quot;&gt;
+      &lt;div&gt;© 2026 WanderWise. All rights reserved.&lt;/div&gt;
+      &lt;div&gt;Travel blog landing page • UI-inspired template&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/footer&gt;
+
+  &lt;script&gt;
+    const burger = document.getElementById(&#039;burger&#039;);
+    const mobileMenu = document.getElementById(&#039;mobileMenu&#039;);
+    burger?.addEventListener(&#039;click&#039;, () =&gt; {
+      mobileMenu.classList.toggle(&#039;open&#039;);
+    });
+
+    const card = document.getElementById(&#039;locationCard&#039;);
+    const pinData = {
+      Marrakech: {
+        title: &#039;Featured location: Marrakech&#039;,
+        text: &#039;Desert textures, vibrant markets, and warm architecture create a rich travel story worth exploring.&#039;
+      },
+      Rome: {
+        title: &#039;Featured location: Rome&#039;,
+        text: &#039;Ancient streets, layered history, and timeless food culture make Rome perfect for editorial travel stories.&#039;
+      },
+      Tokyo: {
+        title: &#039;Featured location: Tokyo&#039;,
+        text: &#039;A mix of modern energy and quiet corners, ideal for design-focused destination storytelling.&#039;
+      },
+      Bali: {
+        title: &#039;Featured location: Bali&#039;,
+        text: &#039;Tropical greens, scenic retreats, and calm coastal views create a serene and inspiring travel mood.&#039;
+      },
+      Vancouver: {
+        title: &#039;Featured location: Vancouver&#039;,
+        text: &#039;Mountains, ocean air, and forested trails make Vancouver a strong base for adventure travel content.&#039;
+      }
+    };
+
+    document.querySelectorAll(&#039;.pin&#039;).forEach(btn =&gt; {
+      btn.addEventListener(&#039;click&#039;, () =&gt; {
+        const key = btn.getAttribute(&#039;data-location&#039;);
+        if (!key || !pinData[key]) return;
+        card.innerHTML = `
+          &lt;strong&gt;${pinData[key].title}&lt;/strong&gt;
+          &lt;p&gt;${pinData[key].text}&lt;/p&gt;
+        `;
+      });
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;!DOCTYPE html&gt;
 html lang=&quot;en&quot;&gt;
 head&gt;
   meta charset=&quot;UTF-8&quot; /&gt;
